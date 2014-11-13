@@ -1,0 +1,27 @@
+{
+  "name": "jotason",
+  "version": "1.0.0",
+  "description": "jotason is a lightweight language that adds syntactic sugar to JSON",
+  "main": "lib/jotason.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/moliveraf/jotason"
+  },
+  "keywords": [
+    "json",
+    "jotason",
+    "syntactic-sugar"
+  ],
+  "author": "Matias Olivera <moliverafreire@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/moliveraf/jotason/issues"
+  },
+  "homepage": "https://github.com/moliveraf/jotason",
+  "devDependencies": {
+    "jison": "^0.4.15"
+  }
+}
