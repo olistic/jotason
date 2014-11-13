@@ -48,11 +48,27 @@ JotasonMemberList
         {{ $$ = {}; $$[$1[0]] = $1[1]; }}
     | JotasonMemberList COMMA JotasonMember
         {{ $$ = $1; $$[$3[0]] = $3[1]; }}
+    | JotasonMemberAbbr
+        {{ $$ = {}; for (var i = 0; i < $1[0].length; i++) $$[$1[0][i]] = $1[1]; }}
+    | JotasonMemberList COMMA JotasonMemberAbbr
+        {{ $$ = $1; for (var i = 0; i < $3[0].length; i++) $$[$3[0][i]] = $3[1]; }}
     ;
 
 JotasonMember
     : JotasonKey COLON JotasonValue
         {{ $$ = [$1, $3]; }}
+    ;
+
+JotasonMemberAbbr
+    : JotasonKeyList COLON JotasonValue
+        {{ $$ = [$1, $3]; }}
+    ;
+
+JotasonKeyList
+    : JotasonKey COMMA JotasonKey
+        {{ $$ = [$1, $3]; }}
+    | JotasonKeyList COMMA JotasonKey
+        {{ $$ = $1; $$.push($3); }}
     ;
 
 JotasonKey
