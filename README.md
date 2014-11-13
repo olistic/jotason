@@ -1,4 +1,4 @@
-jotason.js
+jotason
 ==========
 
-Jotason.js is a lightweight data-interchange language that extends JSON
+jotason is a lightweight language that adds syntactic sugar to JSON
