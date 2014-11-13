@@ -49,6 +49,12 @@ JotasonKey
         {{ $$ = $1; }}
     | ID
         {{ $$ = $1; }}
+    | TRUE 
+        {{ $$ = $1; }}
+    | FALSE
+        {{ $$ = $1; }}
+    | NULL
+        {{ $$ = $1; }}
     ;
 
 JotasonArray
