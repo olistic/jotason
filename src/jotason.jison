@@ -2,6 +2,11 @@
 
 /* author: Matias Olivera */
 
+%token  TRUE
+%token  FALSE
+%token  NULL
+%token  INFINITY
+%token  NAN
 %token  ID
 %token  STRING
 %token  NUMBER
@@ -11,14 +16,20 @@
 %token  RBRACKET
 %token  COMMA
 %token  COLON
-%token  TRUE
-%token  FALSE
-%token  NULL
 %token  ENDOFFILE
 
 %start JotasonText
 
 %%
+
+JotasonNumber
+    : NUMBER
+        {{ $$ = $1; }}
+    | INFINITY
+        {{ $$ = $1; }}
+    | NAN
+        {{ $$ = $1; }}
+    ;
 
 JotasonText
     : JotasonValue ENDOFFILE
@@ -74,7 +85,7 @@ JotasonElementList
 JotasonValue
     : STRING
         {{ $$ = yytext; }}
-    | NUMBER
+    | JotasonNumber
         {{ $$ = Number(yytext); }}
     | JotasonObject
         {{ $$ = $1; }}

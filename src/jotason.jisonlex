@@ -5,7 +5,11 @@ frac                        (?:\.[0-9]+)
 string                      \"(?:[^\"\\]|\\[\"bfnrt/\\]|\\\u[a-fA-F0-9]{4})*\"
 
 %%
-\s+                         { /* skip whitespace */ }
+true\b                      { return 'TRUE'; }
+false\b                     { return 'FALSE'; }
+null\b                      { return 'NULL'; }
+Infinity\b                  { return 'INFINITY'; }
+NaN\b                       { return 'NAN'; }
 {id}                        { return 'ID'; }
 {int}{frac}?{exp}?\b        { return 'NUMBER'; }
 {string}                    { yytext = yytext.substr(1, yyleng - 2); return 'STRING'; }
@@ -15,8 +19,6 @@ string                      \"(?:[^\"\\]|\\[\"bfnrt/\\]|\\\u[a-fA-F0-9]{4})*\"
 "]"                         { return 'RBRACKET'; }
 ":"                         { return 'COLON'; }
 ","                         { return 'COMMA'; }
-true\b                      { return 'TRUE'; }
-false\b                     { return 'FALSE'; }
-null\b                      { return 'NULL'; }
+\s+                         { /* skip whitespace */ }
 <<EOF>>                     { return 'ENDOFFILE'; }
 
