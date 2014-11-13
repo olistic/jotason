@@ -2,6 +2,7 @@
 
 /* author: Matias Olivera */
 
+%token  ID
 %token  STRING
 %token  NUMBER
 %token  LBRACE
@@ -39,8 +40,15 @@ JotasonMemberList
     ;
 
 JotasonMember
-    : STRING COLON JotasonValue
+    : JotasonKey COLON JotasonValue
         {{ $$ = [$1, $3]; }}
+    ;
+
+JotasonKey
+    : STRING
+        {{ $$ = $1; }}
+    | ID
+        {{ $$ = $1; }}
     ;
 
 JotasonArray
