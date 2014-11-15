@@ -42,6 +42,7 @@ JotasonNumber
 JotasonText
     : JotasonValue ENDOFFILE
         {
+            typeof console !== 'undefined' ? console.log($1.toJson()) : print($1.toJson());
             return $$ = $1;
         }
     ;
@@ -195,25 +196,58 @@ JotasonValue
 
 function JotasonObject(members) {
     this.members = members;
+    this.toJson = function() {
+        var json = "{";
+        var index = 0;
+        for (var k in this.members) {
+            if (this.members.hasOwnProperty(k)) {
+                json += "\"" + k + "\": " + this.members[k].toJson();
+                if (index < Object.keys(this.members).length - 1) json += ", ";
+                index += 1;
+            }
+        }
+        json += "}";
+        return json;
+    }
 }
 
 function JotasonArray(elements) {
     this.elements = elements;
+    this.toJson = function() {
+        var json = "[";
+        this.elements.forEach(function(element, index, array) {
+            json += element.toJson();
+            if (index < array.length - 1) json += ", ";
+        });
+        json += "]";
+        return json;
+    }
 }
 
 function JotasonString(value) {
     this.value = value;
+    this.toJson = function() {
+        return "\"" + this.value + "\"";
+    }
 }
 
 function JotasonNumber(value) {
     this.value = value;
+    this.toJson = function() {
+        return this.value;
+    }
 }
 
 function JotasonTruthValue(value) {
     this.value = value;
+    this.toJson = function() {
+        return this.value;
+    }
 }
 
 function JotasonNull() {
     this.value = null;
+    this.toJson = function() {
+        return "null";
+    }
 }
-
