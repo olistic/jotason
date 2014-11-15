@@ -42,7 +42,6 @@ JotasonNumber
 JotasonText
     : JotasonValue ENDOFFILE
         {
-            typeof console !== 'undefined' ? console.log($1) : print($1);
             return $$ = $1;
         }
     ;
@@ -50,28 +49,30 @@ JotasonText
 JotasonObject
     : LBRACE RBRACE
         {
-            $$ = {};
+            $$ = new JotasonObject({});
         }
     | LBRACE JotasonMemberList RBRACE
         {
-            $$ = $2;
+            $$ = new JotasonObject($2);
         }
     ;
 
 JotasonMemberList
     : JotasonMember
         {
-            $$ = {};
+            members = {};
             for (var i = 0; i < $1[0].length; i++) {
-                $$[$1[0][i]] = $1[1];
+                members[$1[0][i]] = $1[1];
             }
+            $$ = members;
         }
     | JotasonMemberList COMMA JotasonMember
         {
-            $$ = $1;
+            members = $1;
             for (var i = 0; i < $3[0].length; i++) {
-                $$[$3[0][i]] = $3[1];
+                members[$3[0][i]] = $3[1];
             }
+            $$ = members;
         }
     ;
 
@@ -102,7 +103,7 @@ JotasonKey
         {
             $$ = $1;
         }
-    | TRUE 
+    | TRUE
         {
             $$ = $1;
         }
@@ -119,15 +120,15 @@ JotasonKey
 JotasonArray
     : LBRACKET RBRACKET
         {
-            $$ = [];
+            $$ = new JotasonArray([]);
         }
     | LBRACKET JotasonElementList RBRACKET
         {
-            $$ = $2;
+            $$ = new JotasonArray($2);
         }
     | LBRACKET LPAREN JotasonKeyList RPAREN COLON JotasonElementList RBRACKET
         {
-            $$ = [];
+            elements = [];
             var keyCount = $3.length, elementCount = $6.length;
             if (elementCount % keyCount == 0) {
                 var rowCount = elementCount/keyCount;
@@ -136,8 +137,9 @@ JotasonArray
                     for (var j = 0; j < keyCount; j++) {
                         members[$3[j]] = $6[i*keyCount + j];
                     }
-                    $$.push(members);
+                    elements.push(new JotasonObject(members));
                 }
+                $$ = new JotasonArray(elements);
             } else {
                 throw new SyntaxError("Element count should be multiple of key count");
             }
@@ -159,11 +161,11 @@ JotasonElementList
 JotasonValue
     : STRING
         {
-            $$ = yytext;
+            $$ = new JotasonString(yytext);
         }
     | JotasonNumber
         {
-            $$ = Number(yytext);
+            $$ = new JotasonNumber(Number(yytext));
         }
     | JotasonObject
         {
@@ -175,15 +177,43 @@ JotasonValue
         }
     | TRUE
         {
-            $$ = true;
+            $$ = new JotasonTruthValue(true);
         }
     | FALSE
         {
-            $$ = false;
+            $$ = new JotasonTruthValue(false);
         }
     | NULL
         {
-            $$ = null;
+            $$ = new JotasonNull();
         }
     ;
+
+%%
+
+/* AST nodes constructors */
+
+function JotasonObject(members) {
+    this.members = members;
+}
+
+function JotasonArray(elements) {
+    this.elements = elements;
+}
+
+function JotasonString(value) {
+    this.value = value;
+}
+
+function JotasonNumber(value) {
+    this.value = value;
+}
+
+function JotasonTruthValue(value) {
+    this.value = value;
+}
+
+function JotasonNull() {
+    this.value = null;
+}
 
