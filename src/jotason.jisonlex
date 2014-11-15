@@ -5,22 +5,22 @@ frac                        (?:\.[0-9]+)
 string                      \"(?:[^\"\\]|\\[\"bfnrt/\\]|\\\u[a-fA-F0-9]{4})*\"
 
 %%
-true\b                      { return 'TRUE'; }
-false\b                     { return 'FALSE'; }
-null\b                      { return 'NULL'; }
-Infinity\b                  { return 'INFINITY'; }
-NaN\b                       { return 'NAN'; }
-{id}                        { return 'ID'; }
-{int}{frac}?{exp}?\b        { return 'NUMBER'; }
-{string}                    { yytext = yytext.substr(1, yyleng - 2); return 'STRING'; }
-"{"                         { return 'LBRACE'; }
-"}"                         { return 'RBRACE'; }
-"["                         { return 'LBRACKET'; }
-"]"                         { return 'RBRACKET'; }
-"("                         { return 'LPAREN'; }
-")"                         { return 'RPAREN'; }
-":"                         { return 'COLON'; }
-","                         { return 'COMMA'; }
-\s+                         { /* skip whitespace */ }
-<<EOF>>                     { return 'ENDOFFILE'; }
+\s+                         /* skip whitespace */
+true\b                      return 'TRUE';
+false\b                     return 'FALSE';
+null\b                      return 'NULL';
+Infinity\b                  return 'INFINITY';
+NaN\b                       return 'NAN';
+{id}                        return 'ID';
+{int}{frac}?{exp}?\b        return 'NUMBER';
+{string}                    yytext = yytext.substr(1, yyleng - 2); return 'STRING';
+"{"                         return 'LBRACE';
+"}"                         return 'RBRACE';
+"["                         return 'LBRACKET';
+"]"                         return 'RBRACKET';
+"("                         return 'LPAREN';
+")"                         return 'RPAREN';
+":"                         return 'COLON';
+","                         return 'COMMA';
+<<EOF>>                     return 'ENDOFFILE';
 

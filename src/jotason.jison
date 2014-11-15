@@ -26,87 +26,164 @@
 
 JotasonNumber
     : NUMBER
-        {{ $$ = $1; }}
+        {
+            $$ = $1;
+        }
     | INFINITY
-        {{ $$ = $1; }}
+        {
+            $$ = $1;
+        }
     | NAN
-        {{ $$ = $1; }}
+        {
+            $$ = $1;
+        }
     ;
 
 JotasonText
     : JotasonValue ENDOFFILE
-        {{ typeof console !== 'undefined' ? console.log($1) : print($1); return $$ = $1; }}
+        {
+            typeof console !== 'undefined' ? console.log($1) : print($1);
+            return $$ = $1;
+        }
     ;
 
 JotasonObject
     : LBRACE RBRACE
-        {{ $$ = {}; }}
+        {
+            $$ = {};
+        }
     | LBRACE JotasonMemberList RBRACE
-        {{ $$ = $2; }}
+        {
+            $$ = $2;
+        }
     ;
 
 JotasonMemberList
     : JotasonMember
-        {{ $$ = {}; for (var i = 0; i < $1[0].length; i++) $$[$1[0][i]] = $1[1]; }}
+        {
+            $$ = {};
+            for (var i = 0; i < $1[0].length; i++) {
+                $$[$1[0][i]] = $1[1];
+            }
+        }
     | JotasonMemberList COMMA JotasonMember
-        {{ $$ = $1; for (var i = 0; i < $3[0].length; i++) $$[$3[0][i]] = $3[1]; }}
+        {
+            $$ = $1;
+            for (var i = 0; i < $3[0].length; i++) {
+                $$[$3[0][i]] = $3[1];
+            }
+        }
     ;
 
 JotasonMember
     : JotasonKeyList COLON JotasonValue
-        {{ $$ = [$1, $3]; }}
+        {
+            $$ = [$1, $3];
+        }
     ;
 
 JotasonKeyList
     : JotasonKey
-        {{ $$ = [$1]; }}
+        {
+            $$ = [$1];
+        }
     | JotasonKeyList COMMA JotasonKey
-        {{ $$ = $1; $$.push($3); }}
+        {
+            $$ = $1; $$.push($3);
+        }
     ;
 
 JotasonKey
     : STRING
-        {{ $$ = $1; }}
+        {
+            $$ = $1;
+        }
     | ID
-        {{ $$ = $1; }}
+        {
+            $$ = $1;
+        }
     | TRUE 
-        {{ $$ = $1; }}
+        {
+            $$ = $1;
+        }
     | FALSE
-        {{ $$ = $1; }}
+        {
+            $$ = $1;
+        }
     | NULL
-        {{ $$ = $1; }}
+        {
+            $$ = $1;
+        }
     ;
 
 JotasonArray
     : LBRACKET RBRACKET
-        {{ $$ = []; }}
+        {
+            $$ = [];
+        }
     | LBRACKET JotasonElementList RBRACKET
-        {{ $$ = $2; }}
+        {
+            $$ = $2;
+        }
     | LBRACKET LPAREN JotasonKeyList RPAREN COLON JotasonElementList RBRACKET
-        {{ $$ = []; var keyCount = $3.length, elementCount = $6.length; if (elementCount % keyCount == 0) { var rowCount = elementCount/keyCount; for (var i = 0; i < rowCount; i++) { var members = {}; for (var j = 0; j < keyCount; j++) members[$3[j]] = $6[i*keyCount + j]; $$.push(members); } } else { throw new SyntaxError("Element count should be multiple of key count"); } }}
+        {
+            $$ = [];
+            var keyCount = $3.length, elementCount = $6.length;
+            if (elementCount % keyCount == 0) {
+                var rowCount = elementCount/keyCount;
+                for (var i = 0; i < rowCount; i++) {
+                    var members = {};
+                    for (var j = 0; j < keyCount; j++) {
+                        members[$3[j]] = $6[i*keyCount + j];
+                    }
+                    $$.push(members);
+                }
+            } else {
+                throw new SyntaxError("Element count should be multiple of key count");
+            }
+        }
     ;
 
 JotasonElementList
     : JotasonValue
-        {{ $$ = [$1];}}
+        {
+            $$ = [$1];
+        }
     | JotasonElementList COMMA JotasonValue
-        {{ $$ = $1; $$.push($3); }}
+        {
+            $$ = $1;
+            $$.push($3);
+        }
     ;
 
 JotasonValue
     : STRING
-        {{ $$ = yytext; }}
+        {
+            $$ = yytext;
+        }
     | JotasonNumber
-        {{ $$ = Number(yytext); }}
+        {
+            $$ = Number(yytext);
+        }
     | JotasonObject
-        {{ $$ = $1; }}
+        {
+            $$ = $1;
+        }
     | JotasonArray
-        {{ $$ = $1; }}
+        {
+            $$ = $1;
+        }
     | TRUE
-        {{ $$ = true; }}
+        {
+            $$ = true;
+        }
     | FALSE
-        {{ $$ = false; }}
+        {
+            $$ = false;
+        }
     | NULL
-        {{ $$ = null; }}
+        {
+            $$ = null;
+        }
     ;
 
