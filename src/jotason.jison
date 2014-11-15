@@ -14,6 +14,8 @@
 %token  RBRACE
 %token  LBRACKET
 %token  RBRACKET
+%token  LPAREN
+%token  RPAREN
 %token  COMMA
 %token  COLON
 %token  ENDOFFILE
@@ -80,6 +82,8 @@ JotasonArray
         {{ $$ = []; }}
     | LBRACKET JotasonElementList RBRACKET
         {{ $$ = $2; }}
+    | LBRACKET LPAREN JotasonKeyList RPAREN COLON JotasonElementList RBRACKET
+        {{ $$ = []; var keyCount = $3.length, elementCount = $6.length; if (elementCount % keyCount == 0) { var rowCount = elementCount/keyCount; for (var i = 0; i < rowCount; i++) { var members = {}; for (var j = 0; j < keyCount; j++) members[$3[j]] = $6[i*keyCount + j]; $$.push(members); } } else { throw new SyntaxError("Element count should be multiple of key count"); } }}
     ;
 
 JotasonElementList

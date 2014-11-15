@@ -17,6 +17,8 @@ NaN\b                       { return 'NAN'; }
 "}"                         { return 'RBRACE'; }
 "["                         { return 'LBRACKET'; }
 "]"                         { return 'RBRACKET'; }
+"("                         { return 'LPAREN'; }
+")"                         { return 'RPAREN'; }
 ":"                         { return 'COLON'; }
 ","                         { return 'COMMA'; }
 \s+                         { /* skip whitespace */ }
